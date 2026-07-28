@@ -1,0 +1,34 @@
+##Armstrong
+a=int(input())
+z=a
+ans=0
+l=len(str(a))
+while a>0:
+    temp=a%10
+    ans+=temp**l
+    a//=10
+if z==ans:
+    print("YES")
+else:
+    print("NO")
+
+
+##print divisors
+a=int(input())
+ans=[1]
+for i in range(2,a//2+1):
+    if a%i==0:
+        ans.append(i)
+ans.append(a)
+print(" ".join(map(str,ans)))
+
+##Prime
+a=int(input())
+ans=[]
+for i in range(2,a//2+1):
+    if a%i==0:
+        ans.append(i)
+if len(ans)==0:
+    print("Yes")
+else:
+    print("No")
