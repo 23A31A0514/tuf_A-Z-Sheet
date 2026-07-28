@@ -1,0 +1,32 @@
+#Palindrome
+x=int(input())
+ans=0
+while x>0:
+    temp=x%10
+    ans=ans*10+temp
+    x=x//10
+print(x==ans)
+
+##No of digits
+x=int(input())
+ans=0
+while x>0:
+    ans+=1
+    x=x//10
+print(ans)
+
+##Reverse of a digit
+x=int(input())
+ans=0
+while x>0:
+    temp=x%10
+    ans=ans*10+temp
+    x=x//10
+print(ans)
+
+#Gcd
+a,b=map(int,input().split())
+while b>0:
+    a,b=b,a%b
+print(a)
+
