@@ -1,0 +1,62 @@
+Largest Element in an ArrayPythondef findLargestElement(arr):
+    largest = arr[0]
+    for i in range(1, len(arr)):
+        if arr[i] > largest:
+            largest = arr[i]
+    return largest
+
+if __name__ == "__main__":
+    arr = [2, 5, 1, 3, 0]
+    print("The largest element in the array is:", findLargestElement(arr))
+Complexity AnalysisTime Complexity: $O(N)$ since we iterate through the array of size $N$ once.Space Complexity: $O(1)$ as no extra space is used.Second Largest Element in an Array without sortingPythondef findSecondLargest(arr):
+    largest = arr[0]
+    secondLargest = -1
+    
+    for i in range(1, len(arr)):
+        if arr[i] > largest:
+            secondLargest = largest
+            largest = arr[i]
+        elif arr[i] > secondLargest and arr[i] != largest:
+            secondLargest = arr[i]
+            
+    return secondLargest
+
+if __name__ == "__main__":
+    arr = [1, 2, 4, 7, 7, 5]
+    print("The second largest element is:", findSecondLargest(arr))
+Complexity AnalysisTime Complexity: $O(N)$ for a single traversal of the array.Space Complexity: $O(1)$ using constant extra space variables.Check if the Array is SortedPythondef isSorted(arr):
+    for i in range(1, len(arr)):
+        if arr[i] < arr[i - 1]:
+            return False
+    return True
+
+if __name__ == "__main__":
+    arr = [1, 2, 3, 4, 5]
+    if isSorted(arr):
+        print("The array is sorted.")
+    else:
+        print("The array is not sorted.")
+Complexity AnalysisTime Complexity: $O(N)$ for linear checking.Space Complexity: $O(1)$ without auxiliary data structures.Remove Duplicates from Sorted ArrayPythondef removeDuplicates(arr):
+    i = 0
+    for j in range(1, len(arr)):
+        if arr[j] != arr[i]:
+            i += 1
+            arr[i] = arr[j]
+    return i + 1
+
+if __name__ == "__main__":
+    arr = [1, 1, 2, 2, 2, 3, 3]
+    k = removeDuplicates(arr)
+    print("The array after removing duplicates:", arr[:k])
+Complexity AnalysisTime Complexity: $O(N)$ for traversing the array using two pointers.Space Complexity: $O(1)$ since elements are modified in-place.Left Rotate an Array by OnePythondef rotateByOne(arr):
+    temp = arr[0]
+    n = len(arr)
+    for i in range(1, n):
+        arr[i - 1] = arr[i]
+    arr[n - 1] = temp
+
+if __name__ == "__main__":
+    arr = [1, 2, 3, 4, 5]
+    rotateByOne(arr)
+    print("Array after rotation:", arr)
+Complexity AnalysisTime Complexity: $O(N)$ for shifting elements.Space Complexity: $O(1)$ extra space.
