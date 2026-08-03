@@ -1,0 +1,126 @@
+Here are 5 common Binary Search practice problems from the Take U Forward (Striver) sheet, complete with problem descriptions, approach summaries, and Python solutions.
+
+1. Binary Search (Standard Search)
+Problem: Given an array of integers nums sorted in ascending order, and an integer target, write a function to search for target in nums. If target exists, then return its index. Otherwise, return -1.
+
+Python Solution
+Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        low, high = 0, len(nums) - 1
+        
+        while low <= high:
+            mid = (low + high) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                low = mid + 1
+            else:
+                high = mid - 1
+                
+        return -1
+2. Find First and Last Position of Element in Sorted Array
+Problem: Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value. If the target is not found, return [-1, -1].
+
+Python Solution
+Python
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        def findFirst():
+            low, high, ans = 0, len(nums) - 1, -1
+            while low <= high:
+                mid = (low + high) // 2
+                if nums[mid] >= target:
+                    if nums[mid] == target: ans = mid
+                    high = mid - 1
+                else:
+                    low = mid + 1
+            return ans
+
+        def findLast():
+            low, high, ans = 0, len(nums) - 1, -1
+            while low <= high:
+                mid = (low + high) // 2
+                if nums[mid] <= target:
+                    if nums[mid] == target: ans = mid
+                    low = mid + 1
+                else:
+                    high = mid - 1
+            return ans
+
+        return [findFirst(), findLast()]
+3. Search in Rotated Sorted Array
+Problem: There is an integer array nums sorted in ascending order (with distinct values). Prior to being passed to your function, nums is possibly rotated at an unknown pivot index. Given the array nums after the rotation and an integer target, return the index of target if it is in nums, or -1 if it is not.
+
+Python Solution
+Python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        low, high = 0, len(nums) - 1
+        
+        while low <= high:
+            mid = (low + high) // 2
+            
+            if nums[mid] == target:
+                return mid
+            
+            # Check if left half is sorted
+            if nums[low] <= nums[mid]:
+                if nums[low] <= target and target < nums[mid]:
+                    high = mid - 1
+                else:
+                    low = mid + 1
+            # Otherwise, right half must be sorted
+            else:
+                if nums[mid] < target and target <= nums[high]:
+                    low = mid + 1
+                else:
+                    high = mid - 1
+                    
+        return -1
+4. Find Minimum in Rotated Sorted Array
+Problem: Suppose an array of length n sorted in ascending order is rotated between 1 and n times. Given the sorted rotated array nums of unique elements, return the minimum element of this array.
+
+Python Solution
+Python
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        low, high = 0, len(nums) - 1
+        ans = float('inf')
+        
+        while low <= high:
+            mid = (low + high) // 2
+            
+            # If left part is sorted, min could be at 'low'
+            if nums[low] <= nums[mid]:
+                ans = min(ans, nums[low])
+                low = mid + 1
+            # If right part is sorted, min could be at 'mid'
+            else:
+                ans = min(ans, nums[mid])
+                high = mid - 1
+                
+        return ans
+5. Koko Eating Bananas
+Problem: Koko loves to eat bananas. There are n piles of bananas, the i-th pile has nums[i] bananas. The guards have gone and will come back in h hours. Return the minimum integer k such that she can eat all the bananas within h hours.
+
+Python Solution
+Python
+import math
+
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        low, high = 1, max(piles)
+        ans = high
+        
+        while low <= high:
+            mid = (low + high) // 2
+            total_hours = sum(math.ceil(pile / mid) for pile in piles)
+            
+            if total_hours <= h:
+                ans = mid
+                high = mid - 1  # Try to find a smaller valid speed
+            else:
+                low = mid + 1   # Need a faster speed
+                
+        return ans
