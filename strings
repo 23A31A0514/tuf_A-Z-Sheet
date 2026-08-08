@@ -1,0 +1,100 @@
+1. Reverse Words in a String
+Problem: Given an input string s, reverse the order of the words while handling extra spaces.
+
+Python
+def reverse_words(s: str) -> str:
+    # Split by whitespace, reverse the list, and join with a single space
+    return " ".join(s.split()[::-1])
+
+
+# Example Usage
+s = "  hello   world  "
+print(reverse_words(s))  # Output: "world hello"
+2. Check if Two Strings are Anagrams
+Problem: Given two strings s and t, return True if t is an anagram of s, and False otherwise.
+
+Python
+from collections import Counter
+
+
+def is_anagram(s: str, t: str) -> bool:
+    if len(s) != len(t):
+        return False
+    return Counter(s) == Counter(t)
+
+
+# Example Usage
+print(is_anagram("anagram", "nagaram"))  # Output: True
+print(is_anagram("rat", "car"))  # Output: False
+3. Longest Common Prefix
+Problem: Find the longest common prefix string amongst an array of strings.
+
+Python
+def longest_common_prefix(strs: list[str]) -> str:
+    if not strs:
+        return ""
+
+    # Sort lexicographically; common prefix between first and last will be the prefix for all
+    strs.sort()
+    first, last = strs[0], strs[-1]
+
+    i = 0
+    while i < len(first) and i < len(last) and first[i] == last[i]:
+        i += 1
+
+    return first[:i]
+
+
+# Example Usage
+print(longest_common_prefix(["flower", "flow", "flight"]))  # Output: "fl"
+4. Isomorphic Strings
+Problem: Determine if two strings s and t are isomorphic (characters in s can be replaced to get t).
+
+Python
+def is_isomorphic(s: str, t: str) -> bool:
+    if len(s) != len(t):
+        return False
+
+    map_s_t, map_t_s = {}, {}
+
+    for char_s, char_t in zip(s, t):
+        if (char_s in map_s_t and map_s_t[char_s] != char_t) or (
+            char_t in map_t_s and map_t_s[char_t] != char_s
+        ):
+            return False
+
+        map_s_t[char_s] = char_t
+        map_t_s[char_t] = char_s
+
+    return True
+
+
+# Example Usage
+print(is_isomorphic("egg", "add"))  # Output: True
+print(is_isomorphic("foo", "bar"))  # Output: False
+5. Longest Palindromic Substring
+Problem: Find the longest palindromic substring in s using the Expand Around Center approach.
+
+Python
+def longest_palindrome(s: str) -> str:
+    res = ""
+
+    def expand(left: int, right: int) -> str:
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return s[left + 1 : right]
+
+    for i in range(len(s)):
+        # Odd length palindrome
+        p1 = expand(i, i)
+        # Even length palindrome
+        p2 = expand(i, i + 1)
+
+        res = max(res, p1, p2, key=len)
+
+    return res
+
+
+# Example Usage
+print(longest_palindrome("babad"))  # Output: "bab" (or "aba")
