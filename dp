@@ -1,0 +1,55 @@
+# 1. Climbing Stairs
+def climb_stairs(n: int) -> int:
+    if n <= 1:
+        return 1
+    prev2, prev1 = 1, 1
+    for _ in range(2, n + 1):
+        curr = prev1 + prev2
+        prev2, prev1 = prev1, curr
+    return prev1
+
+
+# 2. Frog Jump
+def frog_jump(heights: list[int]) -> int:
+    n = len(heights)
+    if n <= 1:
+        return 0
+    prev2, prev1 = 0, abs(heights[1] - heights[0])
+    for i in range(2, n):
+        jump_one = prev1 + abs(heights[i] - heights[i - 1])
+        jump_two = prev2 + abs(heights[i] - heights[i - 2])
+        curr = min(jump_one, jump_two)
+        prev2, prev1 = prev1, curr
+    return prev1
+
+
+# 3. House Robber / Max Sum of Non-Adjacent Elements
+def max_sum_non_adjacent(nums: list[int]) -> int:
+    prev2, prev1 = 0, 0
+    for num in nums:
+        pick = num + prev2
+        not_pick = prev1
+        curr = max(pick, not_pick)
+        prev2, prev1 = prev1, curr
+    return prev1
+
+
+# 4. Grid Unique Paths
+def unique_paths(m: int, n: int) -> int:
+    prev = [1] * n
+    for i in range(1, m):
+        curr = [1] * n
+        for j in range(1, n):
+            curr[j] = curr[j - 1] + prev[j]
+        prev = curr
+    return prev[-1]
+
+
+# 5. 0/1 Knapsack
+def knapsack(weights: list[int], values: list[int], W: int) -> int:
+    dp = [0] * (W + 1)
+    for i in range(len(weights)):
+        wt, val = weights[i], values[i]
+        for w in range(W, wt - 1, -1):
+            dp[w] = max(dp[w], val + dp[w - wt])
+    return dp[W]
