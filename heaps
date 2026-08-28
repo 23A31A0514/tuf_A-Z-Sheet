@@ -1,0 +1,107 @@
+def findKthLargest(nums: list[int], k: int) -> int:
+    # Maintain a min-heap of size k
+    min_heap = []
+    for num in nums:
+        heapq.heappush(min_heap, num)
+        if len(min_heap) > k:
+            heapq.heappop(min_heap)
+            
+    # The root of the min-heap is the kth largest element
+    return min_heap[0]
+Time Complexity: $O(N \log k)$Space Complexity: $O(k)$2. Top K Frequent ElementsProblem Statement:Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.Pythonimport heapq
+from collections import Counter
+
+def topKFrequent(nums: list[int], k: int) -> list[int]:
+    count = Counter(nums)
+    min_heap = []
+    
+    for num, freq in count.items():
+        heapq.heappush(min_heap, (freq, num))
+        if len(min_heap) > k:
+            heapq.heappop(min_heap)
+            
+    return [num for freq, num in min_heap]
+Time Complexity: $O(N \log k)$Space Complexity: $O(N)$3. Merge K Sorted ListsProblem Statement:You are given an array of k linked-lists lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.Pythonimport heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeKLists(lists: list[ListNode]) -> ListNode:
+    min_heap = []
+    
+    # Push the head of each list into the min-heap
+    # Include list index i to avoid type comparison errors on duplicate node values
+    for i, l in enumerate(lists):
+        if l:
+            heapq.heappush(min_heap, (l.val, i, l))
+            
+    dummy = ListNode(0)
+    curr = dummy
+    
+    while min_heap:
+        val, i, node = heapq.heappop(min_heap)
+        curr.next = node
+        curr = curr.next
+        
+        if node.next:
+            heapq.heappush(min_heap, (node.next.val, i, node.next))
+            
+    return dummy.next
+Time Complexity: $O(N \log k)$ (where $N$ is total nodes across all lists)Space Complexity: $O(k)$4. Find Median from Data StreamProblem Statement:Design a data structure that supports adding new numbers dynamically and finding the median of all elements added so far.Pythonimport heapq
+
+class MedianFinder:
+    def __init__(self):
+        # Max-heap for lower half of numbers (inverted values for min-heap implementation)
+        self.small = []
+        # Min-heap for upper half of numbers
+        self.large = []
+
+    def addNum(self, num: int) -> None:
+        # Step 1: Push to max-heap (small)
+        heapq.heappush(self.small, -num)
+        
+        # Step 2: Ensure every element in small <= every element in large
+        if self.small and self.large and (-self.small[0] > self.large[0]):
+            val = -heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+            
+        # Step 3: Balance sizes (small can have at most 1 extra element)
+        if len(self.small) > len(self.large) + 1:
+            val = -heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+        elif len(self.large) > len(self.small):
+            val = heapq.heappop(self.large)
+            heapq.heappush(self.small, -val)
+
+    def findMedian(self) -> float:
+        if len(self.small) > len(self.large):
+            return -self.small[0]
+        return (-self.small[0] + self.large[0]) / 2.0
+Time Complexity: $O(\log N)$ for addNum, $O(1)$ for findMedianSpace Complexity: $O(N)$5. Task SchedulerProblem Statement:Given a characters array tasks, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could have completed a task or be idle. However, there is a non-negative integer n that represents the cooldown period between two same tasks (there must be at least n units of time between any two same tasks). Return the minimum number of units of time that the CPU will take to finish all the given tasks.Pythonimport heapq
+from collections import Counter, deque
+
+def leastInterval(tasks: list[str], n: int) -> int:
+    count = Counter(tasks)
+    # Max-heap to process most frequent remaining tasks first
+    max_heap = [-cnt for cnt in count.values()]
+    heapq.heapify(max_heap)
+    
+    time = 0
+    # Queue stores tuples: (remaining_count, available_at_time)
+    q = deque()
+    
+    while max_heap or q:
+        time += 1
+        
+        if max_heap:
+            cnt = 1 + heapq.heappop(max_heap)  # Decrement task count
+            if cnt < 0:
+                q.append((cnt, time + n))
+                
+        if q and q[0][1] == time:
+            heapq.heappush(max_heap, q.popleft()[0])
+            
+    return time
+Time Complexity: $O(N)$Space Complexity: $O(1)$ (since there are at most 26 uppercase English letters)
