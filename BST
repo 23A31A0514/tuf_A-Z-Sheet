@@ -1,0 +1,76 @@
+1. Search in a Binary Search TreeProblem: Given the root of a BST and an integer val, find the node with that value and return its subtree. If the node does not exist, return None.Pythonclass TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def searchBST(root: TreeNode, val: int) -> TreeNode:
+    while root is not None and root.val != val:
+        if val < root.val:
+            root = root.left
+        else:
+            root = root.right
+    return root
+Time Complexity: $O(H)$ where $H$ is the height of the BST.Space Complexity: $O(1)$ iterative approach.2. Insert a Node in a BSTProblem: Given the root node of a BST and a value to insert, insert the value into the BST such that the tree remains a valid BST.Pythondef insertIntoBST(root: TreeNode, val: int) -> TreeNode:
+    if not root:
+        return TreeNode(val)
+    
+    curr = root
+    while True:
+        if val < curr.val:
+            if curr.left:
+                curr = curr.left
+            else:
+                curr.left = TreeNode(val)
+                break
+        else:
+            if curr.right:
+                curr = curr.right
+            else:
+                curr.right = TreeNode(val)
+                break
+                
+    return root
+Time Complexity: $O(H)$Space Complexity: $O(1)$3. Validate Binary Search TreeProblem: Check whether a given Binary Tree is a valid Binary Search Tree. Every node's left subtree must contain values strictly less than the node's value, and the right subtree must contain values strictly greater.Pythondef isValidBST(root: TreeNode) -> bool:
+    def validate(node, low=float('-inf'), high=float('inf')):
+        if not node:
+            return True
+        if not (low < node.val < high):
+            return False
+        
+        return validate(node.left, low, node.val) and validate(node.right, node.val, high)
+
+    return validate(root)
+Time Complexity: $O(N)$ where $N$ is the total number of nodes.Space Complexity: $O(H)$ for the recursive call stack.4. Lowest Common Ancestor (LCA) in a BSTProblem: Find the lowest common ancestor of two given nodes, p and q, in a BST.Pythondef lowestCommonAncestor(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+    curr = root
+    while curr:
+        # If both p and q are smaller, LCA must be in the left subtree
+        if p.val < curr.val and q.val < curr.val:
+            curr = curr.left
+        # If both p and q are greater, LCA must be in the right subtree
+        elif p.val > curr.val and q.val > curr.val:
+            curr = curr.right
+        # Split point found
+        else:
+            return curr
+    return None
+Time Complexity: $O(H)$Space Complexity: $O(1)$5. K-th Smallest Element in a BSTProblem: Given the root of a BST and an integer k, return the k-th smallest value (1-indexed) in the tree.Pythondef kthSmallest(root: TreeNode, k: int) -> int:
+    stack = []
+    curr = root
+    
+    while curr or stack:
+        # Reach the leftmost node
+        while curr:
+            stack.append(curr)
+            curr = curr.left
+            
+        curr = stack.pop()
+        k -= 1
+        if k == 0:
+            return curr.val
+        
+        # Move to right subtree
+        curr = curr.right
+        
+    return -1
+Time Complexity: $O(H + K)$Space Complexity: $O(H)$
