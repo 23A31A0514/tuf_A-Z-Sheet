@@ -1,1 +1,123 @@
+Here are 5 essential Breadth-First Search (BFS) interview questions in Python, ranging from standard traversals to grid and graph applications.1. BFS Traversal of a GraphGiven an adjacency list representing an undirected graph and a starting node, return the order of visited nodes.Pythonfrom collections import deque
 
+def bfs_graph(adj_list, start_node):
+    visited = set([start_node])
+    queue = deque([start_node])
+    result = []
+    
+    while queue:
+        node = queue.popleft()
+        result.append(node)
+        
+        for neighbor in adj_list.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                
+    return result
+2. Binary Tree Level Order TraversalGiven the root of a binary tree, return the level order traversal of its nodes' values (i.e., level by level, left to right).Pythonfrom collections import deque
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def level_order(root):
+    if not root:
+        return []
+    
+    result = []
+    queue = deque([root])
+    
+    while queue:
+        level_size = len(queue)
+        current_level = []
+        
+        for _ in range(level_size):
+            node = queue.popleft()
+            current_level.append(node.val)
+            
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+                
+        result.append(current_level)
+        
+    return result
+3. Rotting Oranges (Grid BFS)Given an $m \times n$ grid where 2 represents a rotten orange, 1 represents a fresh orange, and 0 represents an empty cell, return the minimum number of minutes until no fresh orange remains. If impossible, return -1.Pythonfrom collections import deque
+
+def oranges_rotting(grid):
+    rows, cols = len(grid), len(grid[0])
+    queue = deque()
+    fresh = 0
+    
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2:
+                queue.append((r, c))
+            elif grid[r][c] == 1:
+                fresh += 1
+                
+    if fresh == 0:
+        return 0
+        
+    minutes = 0
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    
+    while queue and fresh > 0:
+        minutes += 1
+        for _ in range(len(queue)):
+            r, c = queue.popleft()
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc))
+                    
+    return minutes if fresh == 0 else -1
+4. Shortest Path in Unweighted GraphFind the shortest path distance between a start node and a target node in an unweighted graph.Pythonfrom collections import deque
+
+def shortest_path(adj_list, start, target):
+    if start == target:
+        return 0
+        
+    queue = deque([(start, 0)])  # (node, distance)
+    visited = {start}
+    
+    while queue:
+        node, dist = queue.popleft()
+        
+        for neighbor in adj_list.get(node, []):
+            if neighbor == target:
+                return dist + 1
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, dist + 1))
+                
+    return -1
+5. Word Ladder (Shortest Transformation Sequence)Given a start word, an end word, and a dictionary word list, return the number of words in the shortest transformation sequence from start to end (changing one letter at a time).Pythonfrom collections import deque
+
+def ladder_length(begin_word, end_word, word_list):
+    word_set = set(word_list)
+    if end_word not in word_set:
+        return 0
+        
+    queue = deque([(begin_word, 1)])
+    visited = {begin_word}
+    
+    while queue:
+        word, level = queue.popleft()
+        if word == end_word:
+            return level
+            
+        for i in range(len(word)):
+            for c in 'abcdefghijklmnopqrstuvwxyz':
+                next_word = word[:i] + c + word[i+1:]
+                if next_word in word_set and next_word not in visited:
+                    visited.add(next_word)
+                    queue.append((next_word, level + 1))
+                    
+    return 0
