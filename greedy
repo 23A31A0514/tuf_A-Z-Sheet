@@ -1,1 +1,84 @@
+Assign Cookies (Easy)
 
+Pattern: Two pointers on sorted arrays to match smallest requests with smallest available resources.
+
+Python
+def findContentChildren(g: list[int], s: list[int]) -> int:
+    g.sort()
+    s.sort()
+    child, cookie = 0, 0
+    while child < len(g) and cookie < len(s):
+        if s[cookie] >= g[child]:
+            child += 1
+        cookie += 1
+    return child
+Fractional Knapsack (Medium)
+
+Pattern: Sorting items by value-to-weight ratio to maximize value under weight limit.
+
+Python
+def fractionalKnapsack(w: int, arr: list[tuple[int, int]]) -> float:
+    # arr items are tuples: (value, weight)
+    arr.sort(key=lambda x: x[0] / x[1], reverse=True)
+    total_value = 0.0
+    for val, wt in arr:
+        if w >= wt:
+            w -= wt
+            total_value += val
+        else:
+            total_value += val * (w / wt)
+            break
+    return total_value
+N Meetings in One Room / Activity Selection (Medium)
+
+Pattern: Sorting events by end time to maximize the number of non-overlapping activities.
+
+Python
+def maxMeetings(start: list[int], end: list[int]) -> int:
+    meetings = sorted(zip(start, end), key=lambda x: x[1])
+    count = 0
+    last_end_time = -1
+    for s, e in meetings:
+        if s > last_end_time:
+            count += 1
+            last_end_time = e
+    return count
+Minimum Platforms (Medium)
+
+Pattern: Two pointers on separate sorted arrival/departure arrays to track peak concurrent usage.
+
+Python
+def findPlatform(arr: list[int], dep: list[int]) -> int:
+    arr.sort()
+    dep.sort()
+    i, j = 0, 0
+    platforms, max_platforms = 0, 0
+    while i < len(arr):
+        if arr[i] <= dep[j]:
+            platforms += 1
+            max_platforms = max(max_platforms, platforms)
+            i += 1
+        else:
+            platforms -= 1
+            j += 1
+    return max_platforms
+Job Sequencing Problem (Hard)
+
+Pattern: Sorting jobs by profit descending and assigning each to the latest available slot before deadline.
+
+Python
+def JobScheduling(jobs: list[tuple[int, int, int]]) -> list[int]:
+    # jobs elements are tuples: (job_id, deadline, profit)
+    jobs.sort(key=lambda x: x[2], reverse=True)
+    max_deadline = max(job[1] for job in jobs)
+    slots = [-1] * (max_deadline + 1)
+
+    count_jobs, max_profit = 0, 0
+    for job_id, deadline, profit in jobs:
+        for day in range(deadline, 0, -1):
+            if slots[day] == -1:
+                slots[day] = job_id
+                count_jobs += 1
+                max_profit += profit
+                break
+    return [count_jobs, max_profit]
