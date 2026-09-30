@@ -1,1 +1,100 @@
+Here is clean Python code for each of the top 5 hashing problems, structured with standard optimal approaches:
 
+1. Count Frequency of Array Elements
+Python
+def count_frequencies(nums):
+    freq = {}
+    for num in nums:
+        freq[num] = freq.get(num, 0) + 1
+    return freq
+
+# Example Usage
+print(count_frequencies([1, 2, 2, 3, 1, 4, 1]))
+# Output: {1: 3, 2: 2, 3: 1, 4: 1}
+2. Longest Consecutive Sequence
+Python
+def longest_consecutive(nums):
+    num_set = set(nums)
+    longest = 0
+
+    for num in num_set:
+        # Only start counting if 'num' is the start of a sequence
+        if num - 1 not in num_set:
+            current_num = num
+            current_streak = 1
+
+            while current_num + 1 in num_set:
+                current_num += 1
+                current_streak += 1
+
+            longest = max(longest, current_streak)
+
+    return longest
+
+# Example Usage
+print(longest_consecutive([100, 4, 200, 1, 3, 2]))
+# Output: 4 (Sequence: [1, 2, 3, 4])
+3. Subarray Sum Equals K
+Python
+def subarray_sum(nums, k):
+    prefix_map = {0: 1}  # Base case: a prefix sum of 0 appears once
+    current_sum = 0
+    count = 0
+
+    for num in nums:
+        current_sum += num
+        
+        # Check if (current_sum - k) exists in hash map
+        if current_sum - k in prefix_map:
+            count += prefix_map[current_sum - k]
+            
+        prefix_map[current_sum] = prefix_map.get(current_sum, 0) + 1
+
+    return count
+
+# Example Usage
+print(subarray_sum([1, 1, 1], 2))
+# Output: 2
+4. Longest Subarray with Sum K (or 0)
+Python
+def max_len_subarray(nums, k):
+    prefix_map = {}
+    current_sum = 0
+    max_len = 0
+
+    for i, num in enumerate(nums):
+        current_sum += num
+
+        # If current prefix sum equals k
+        if current_sum == k:
+            max_len = i + 1
+
+        # Check if (current_sum - k) has been seen before
+        if current_sum - k in prefix_map:
+            max_len = max(max_len, i - prefix_map[current_sum - k])
+
+        # Store only first occurrence to maximize subarray length
+        if current_sum not in prefix_map:
+            prefix_map[current_sum] = i
+
+    return max_len
+
+# Example Usage
+print(max_len_subarray([10, 5, 2, 7, 1, 9], 15))
+# Output: 4 (Subarray: [5, 2, 7, 1])
+5. Two Sum
+Python
+def two_sum(nums, target):
+    seen = {}  # Stores value -> index
+
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+
+    return []
+
+# Example Usage
+print(two_sum([2, 7, 11, 15], 9))
+# Output: [0, 1]
