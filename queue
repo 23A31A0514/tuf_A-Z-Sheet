@@ -1,1 +1,145 @@
+1. Implement Queue using Arrays
+Problem Statement:
 
+Implement a First-In-First-Out (FIFO) queue data structure using a fixed-size array. Support operations push(x) (enqueue), pop() (dequeue), and top() / peek().
+
+Python
+class Queue:
+    def __init__(self, capacity: int = 1000):
+        self.capacity = capacity
+        self.arr = [0] * capacity
+        self.front = 0
+        self.rear = 0
+        self.count = 0
+
+    def push(self, x: int) -> None:
+        if self.count == self.capacity:
+            print("Queue Overflow")
+            return
+        self.arr[self.rear % self.capacity] = x
+        self.rear += 1
+        self.count += 1
+
+    def pop(self) -> int:
+        if self.count == 0:
+            return -1
+        val = self.arr[self.front % self.capacity]
+        self.front += 1
+        self.count -= 1
+        return val
+
+    def top(self) -> int:
+        if self.count == 0:
+            return -1
+        return self.arr[self.front % self.capacity]
+
+    def size(self) -> int:
+        return self.count
+2. Implement Queue using Stacks
+Problem Statement:
+
+Implement a FIFO queue using only standard stack operations (push, pop, peek, empty).
+
+Python
+class MyQueue:
+    def __init__(self):
+        self.input = []
+        self.output = []
+
+    def push(self, x: int) -> None:
+        self.input.append(x)
+
+    def pop(self) -> int:
+        self.peek()
+        return self.output.pop()
+
+    def peek(self) -> int:
+        if not self.output:
+            while self.input:
+                self.output.append(self.input.pop())
+        return self.output[-1]
+
+    def empty(self) -> bool:
+        return not self.input and not self.output
+3. Implement Stack using Queue
+Problem Statement:
+
+Implement a Last-In-First-Out (LIFO) stack using only a standard queue (FIFO) data structure.
+
+Python
+from collections import deque
+
+class MyStack:
+    def __init__(self):
+        self.q = deque()
+
+    def push(self, x: int) -> None:
+        self.q.append(x)
+        # Rotate the queue so that the newly added element moves to the front
+        for _ in range(len(self.q) - 1):
+            self.q.append(self.q.popleft())
+
+    def pop(self) -> int:
+        return self.q.popleft()
+
+    def top(self) -> int:
+        return self.q[0]
+
+    def empty(self) -> bool:
+        return len(self.q) == 0
+4. Sliding Window Maximum
+Problem Statement:
+
+Given an array nums and an integer k, a sliding window of size k moves from left to right. Return the maximum element in each sliding window.
+
+Python
+from collections import deque
+from typing import List
+
+def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
+    dq = deque()  # stores indices of useful elements in monotonic decreasing order
+    res = []
+
+    for i in range(len(nums)):
+        # Remove indices outside current window
+        if dq and dq[0] == i - k:
+            dq.popleft()
+
+        # Remove elements smaller than current element nums[i]
+        while dq and nums[dq[-1]] < nums[i]:
+            dq.pop()
+
+        dq.append(i)
+
+        # Add maximum for window starting from index k - 1
+        if i >= k - 1:
+            res.append(nums[dq[0]])
+
+    return res
+5. First Non-Repeating Character in a Stream
+Problem Statement:
+
+Given a stream of characters, find the first non-repeating character after reading each character. If no such character exists, output '#'.
+
+Python
+from collections import deque, defaultdict
+
+def firstNonRepeating(stream: str) -> str:
+    freq = defaultdict(int)
+    q = deque()
+    result = []
+
+    for char in stream:
+        freq[char] += 1
+        q.append(char)
+
+        # Remove characters from queue front if frequency > 1
+        while q and freq[q[0]] > 1:
+            q.popleft()
+
+        if q:
+            result.append(q[0])
+        else:
+            result.append('#')
+
+    return "".join(result)
